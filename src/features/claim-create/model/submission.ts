@@ -59,7 +59,15 @@ export const useSubmissionStore = create<SubmissionState>((set, get) => {
     try {
       for (let attempt = 1; attempt <= MAX_AUTO_ATTEMPTS; attempt++) {
         if (gen !== generation) return null;
-        update({ key, body, attempt, phase: attempt === 1 ? 'sending' : 'retrying', message: get().submission?.message });
+        // Keep the retry reason visible between attempts, but never carry over a message from an older submission.
+        const prev = get().submission;
+        update({
+          key,
+          body,
+          attempt,
+          phase: attempt === 1 ? 'sending' : 'retrying',
+          message: prev?.key === key && prev.phase !== 'rejected' ? prev.message : undefined,
+        });
         try {
           const claim = await createClaim(body, key);
           if (gen !== generation) return null;
