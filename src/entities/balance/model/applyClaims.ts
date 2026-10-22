@@ -1,12 +1,12 @@
-import type { BalanceItem, Balances, Claim } from './api';
-import { parseApiAmount, toUsd, type Units } from './money';
+import type { BalanceItem, Balances } from '../api';
+import { parseApiAmount, toUsd, type Units } from '@/shared/lib/money';
 
-/** A claim this device created, kept so the balance can reflect it before the next snapshot. */
-export interface TrackedClaim {
+/** A claim this device created (structural type, so balance does not import the claim entity), kept so the balance can reflect it before the next snapshot. */
+export interface ClaimOverlay {
   id: string;
   asset: string;
   amount: string;
-  status: Claim['status'];
+  status: 'pending' | 'completed' | 'failed';
   createdAt: string;
   failureReason: string | null;
 }
@@ -35,7 +35,7 @@ export interface AssetBalance {
  * Failed claims are not applied: their amount is back in available.
  * Equal timestamps are treated as "not included" (conservative: show less available).
  */
-export function applyClaims(snapshot: Balances, claims: TrackedClaim[]): AssetBalance[] {
+export function applyClaims(snapshot: Balances, claims: ClaimOverlay[]): AssetBalance[] {
   const asOf = Date.parse(snapshot.asOf);
   return snapshot.items.map((item) => {
     const base = fromItem(item);

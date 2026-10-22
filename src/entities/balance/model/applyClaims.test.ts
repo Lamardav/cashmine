@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import type { Balances } from './api';
-import { applyClaims, isNewer, sumUsd, type TrackedClaim } from './balances';
-import { formatUnits, formatUsd } from './money';
+import type { Balances } from '../api';
+import { applyClaims, isNewer, sumUsd, type ClaimOverlay } from './applyClaims';
+import { formatUnits, formatUsd } from '@/shared/lib/money';
 
 const snapshot = (asOf: string, available: string, claiming = '0'): Balances => ({
   asOf,
   items: [{ asset: 'ETH', decimals: 18, available, pending: '0.1', claiming, usdPrice: '2000' }],
 });
 
-const claim = (over: Partial<TrackedClaim> = {}): TrackedClaim => ({
+const claim = (over: Partial<ClaimOverlay> = {}): ClaimOverlay => ({
   id: 'clm_1',
   asset: 'ETH',
   amount: '0.5',
