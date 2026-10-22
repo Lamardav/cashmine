@@ -1,6 +1,6 @@
 # CashMine payback (practical task)
 
-**Live:** https://GITHUB_USER.github.io/cashmine/
+**Live:** https://lamardav.github.io/cashmine/
 
 Expo (React Native + TypeScript) app shipped as a web build for phones (~390 px).
 On first open it asks for your API token. The token is kept only in this browser and can be
